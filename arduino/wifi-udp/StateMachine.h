@@ -2,6 +2,10 @@
 
 #pragma once
 
+#define MILLIS_PER_SECOND  1000UL
+#define MILLIS_PER_MINUTE  (60UL * MILLIS_PER_SECOND)
+#define MILLIS_PER_HOUR    (60UL * MILLIS_PER_MINUTE)
+
 class StateMachine
 {
 protected:
@@ -19,5 +23,5 @@ private:
 
 public:
   StateMachine();
-  virtual void tick();
+  void tick();
 };

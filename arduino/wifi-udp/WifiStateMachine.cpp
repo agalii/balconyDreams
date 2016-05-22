@@ -34,11 +34,11 @@ void WifiStateMachine::triggerState(int state)
   switch (state) {
     case WIFI_OFF:
       digitalWrite(resetPin, LOW);
-      waitState(WIFI_RST_HIGH, 300000);
+      waitState(WIFI_RST_HIGH, 15 * MILLIS_PER_MINUTE);
       break;
     case WIFI_RST_HIGH:
       digitalWrite(resetPin, HIGH);
-      waitState(WIFI_CIPSTART, 10000);
+      waitState(WIFI_CIPSTART, 10 * MILLIS_PER_SECOND);
       break;
     case WIFI_CIPSTART:
       snprintf(command, sizeof(command), "AT+CIPSTART=\"UDP\",\"%s\",%d,%d,0", server, port, port);
@@ -53,7 +53,7 @@ void WifiStateMachine::triggerState(int state)
       break;
     case WIFI_SEND_PAYLOAD:
       swSerial->println(payload);
-      waitState(WIFI_OFF, 10000);
+      waitState(WIFI_OFF, 10 * MILLIS_PER_SECOND);
       break;
   }
 }
