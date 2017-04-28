@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.6.0">
+<eagle version="8.1.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
+<layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
+<layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
+<layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
+<layer number="5" name="Route5" color="4" fill="4" visible="no" active="no"/>
+<layer number="6" name="Route6" color="1" fill="8" visible="no" active="no"/>
+<layer number="7" name="Route7" color="4" fill="8" visible="no" active="no"/>
+<layer number="8" name="Route8" color="1" fill="2" visible="no" active="no"/>
+<layer number="9" name="Route9" color="4" fill="2" visible="no" active="no"/>
+<layer number="10" name="Route10" color="1" fill="7" visible="no" active="no"/>
+<layer number="11" name="Route11" color="4" fill="7" visible="no" active="no"/>
+<layer number="12" name="Route12" color="1" fill="5" visible="no" active="no"/>
+<layer number="13" name="Route13" color="4" fill="5" visible="no" active="no"/>
+<layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
+<layer number="15" name="Route15" color="4" fill="6" visible="no" active="no"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="no" active="no"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="no" active="no"/>
@@ -43,6 +57,7 @@
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="no"/>
 <layer number="48" name="Document" color="7" fill="1" visible="no" active="no"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="no"/>
+<layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
 <layer number="51" name="tDocu" color="7" fill="1" visible="no" active="no"/>
 <layer number="52" name="bDocu" color="7" fill="1" visible="no" active="no"/>
 <layer number="90" name="Modules" color="5" fill="1" visible="yes" active="yes"/>
@@ -54,6 +69,9 @@
 <layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="99" name="SpiceOrder" color="5" fill="1" visible="yes" active="yes"/>
+<layer number="250" name="Descript" color="3" fill="1" visible="no" active="no"/>
+<layer number="251" name="SMDround" color="12" fill="11" visible="no" active="no"/>
 </layers>
 <schematic xreflabel="%F%N/%S.%C%R" xrefpart="/%S.%C%R">
 <libraries>
@@ -10782,6 +10800,69 @@ Source: http://eshop.phoenixcontact.com .. 1729128.pdf</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="transistors_gaui">
+<description>&lt;b&gt;2N7002T; N-channel TrenchMOS FET&lt;/b&gt;&lt;p&gt;
+Produced by Philips. All information is found at:&lt;br&gt;
+http://www.semiconductors.philips.com/pip/2N7002T.html&lt;br&gt;
+&lt;/p&gt;
+&lt;author&gt;Created by gudjon@mc2.chalmers.se&lt;/author&gt;</description>
+<packages>
+<package name="SOT23">
+<description>&lt;b&gt;SOT-23&lt;/b&gt;</description>
+<wire x1="1.4224" y1="0.6604" x2="1.4224" y2="-0.6604" width="0.1524" layer="51"/>
+<wire x1="1.4224" y1="-0.6604" x2="-1.4224" y2="-0.6604" width="0.1524" layer="51"/>
+<wire x1="-1.4224" y1="-0.6604" x2="-1.4224" y2="0.6604" width="0.1524" layer="51"/>
+<wire x1="-1.4224" y1="0.6604" x2="1.4224" y2="0.6604" width="0.1524" layer="51"/>
+<smd name="3" x="0" y="1.1" dx="1" dy="1.4" layer="1"/>
+<smd name="2" x="0.95" y="-1.1" dx="1" dy="1.4" layer="1"/>
+<smd name="1" x="-0.95" y="-1.1" dx="1" dy="1.4" layer="1"/>
+<text x="-1.905" y="1.905" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.905" y="-3.175" size="1.27" layer="27">&gt;VALUE</text>
+<rectangle x1="-0.2286" y1="0.7112" x2="0.2286" y2="1.2954" layer="51"/>
+<rectangle x1="0.7112" y1="-1.2954" x2="1.1684" y2="-0.7112" layer="51"/>
+<rectangle x1="-1.1684" y1="-1.2954" x2="-0.7112" y2="-0.7112" layer="51"/>
+</package>
+</packages>
+<symbols>
+<symbol name="IGFET-EN-GDS">
+<wire x1="-2.54" y1="-2.54" x2="-1.2192" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="0" y1="0.762" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="0" y2="-0.762" width="0.254" layer="94"/>
+<wire x1="0" y1="3.683" x2="0" y2="1.397" width="0.254" layer="94"/>
+<wire x1="1.905" y1="0.635" x2="0.635" y2="0" width="0.254" layer="94"/>
+<wire x1="1.905" y1="-0.635" x2="0.635" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="0.635" y2="0" width="0.1524" layer="94"/>
+<wire x1="0.635" y1="0" x2="2.54" y2="0" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="0" x2="2.54" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="0" y1="-1.397" x2="0" y2="-3.683" width="0.254" layer="94"/>
+<wire x1="-1.143" y1="2.54" x2="-1.143" y2="-2.54" width="0.254" layer="94"/>
+<text x="-11.43" y="0" size="1.778" layer="96">&gt;VALUE</text>
+<text x="-11.43" y="2.54" size="1.778" layer="95">&gt;NAME</text>
+<pin name="D" x="5.08" y="2.54" visible="off" length="middle" direction="pas" rot="R180"/>
+<pin name="S" x="5.08" y="-2.54" visible="off" length="middle" direction="pas" rot="R180"/>
+<pin name="G" x="-5.08" y="-2.54" visible="off" length="short" direction="pas"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="2N7002" prefix="Q">
+<gates>
+<gate name="G$1" symbol="IGFET-EN-GDS" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SOT23">
+<connects>
+<connect gate="G$1" pin="D" pad="3"/>
+<connect gate="G$1" pin="G" pad="1"/>
+<connect gate="G$1" pin="S" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -10830,6 +10911,10 @@ Source: http://eshop.phoenixcontact.com .. 1729128.pdf</description>
 <part name="GND11" library="supply1" deviceset="GND" device=""/>
 <part name="X1" library="con-phoenix-254" deviceset="MPT2" device=""/>
 <part name="GND12" library="supply1" deviceset="GND" device=""/>
+<part name="Q4" library="transistors_gaui" deviceset="2N7002" device=""/>
+<part name="GND13" library="supply1" deviceset="GND" device=""/>
+<part name="R8" library="rcl" deviceset="R-EU_" device="R0805"/>
+<part name="P+5" library="supply1" deviceset="VCC" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -10883,6 +10968,10 @@ Source: http://eshop.phoenixcontact.com .. 1729128.pdf</description>
 <instance part="X1" gate="-1" x="20.32" y="76.2"/>
 <instance part="X1" gate="-2" x="20.32" y="71.12"/>
 <instance part="GND12" gate="1" x="15.24" y="66.04"/>
+<instance part="Q4" gate="G$1" x="144.78" y="137.16" rot="MR0"/>
+<instance part="GND13" gate="1" x="137.16" y="129.54"/>
+<instance part="R8" gate="G$1" x="162.56" y="142.24" rot="R90"/>
+<instance part="P+5" gate="VCC" x="162.56" y="152.4"/>
 </instances>
 <busses>
 </busses>
@@ -10957,6 +11046,12 @@ Source: http://eshop.phoenixcontact.com .. 1729128.pdf</description>
 <wire x1="15.24" y1="68.58" x2="15.24" y2="71.12" width="0.1524" layer="91"/>
 <wire x1="15.24" y1="71.12" x2="17.78" y2="71.12" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="Q4" gate="G$1" pin="S"/>
+<wire x1="139.7" y1="134.62" x2="137.16" y2="134.62" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="134.62" x2="137.16" y2="132.08" width="0.1524" layer="91"/>
+<pinref part="GND13" gate="1" pin="GND"/>
+</segment>
 </net>
 <net name="VCC" class="0">
 <segment>
@@ -10981,6 +11076,11 @@ Source: http://eshop.phoenixcontact.com .. 1729128.pdf</description>
 <pinref part="C1" gate="G$1" pin="+"/>
 <pinref part="P+4" gate="VCC" pin="VCC"/>
 <wire x1="200.66" y1="109.22" x2="200.66" y2="111.76" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R8" gate="G$1" pin="2"/>
+<wire x1="162.56" y1="147.32" x2="162.56" y2="149.86" width="0.1524" layer="91"/>
+<pinref part="P+5" gate="VCC" pin="VCC"/>
 </segment>
 </net>
 <net name="RELAIS_7" class="0">
@@ -11057,14 +11157,18 @@ Source: http://eshop.phoenixcontact.com .. 1729128.pdf</description>
 </net>
 <net name="RELAIS_1" class="0">
 <segment>
-<pinref part="SV1" gate="1" pin="2"/>
-<wire x1="88.9" y1="139.7" x2="91.44" y2="139.7" width="0.1524" layer="91"/>
-<label x="91.44" y="139.7" size="1.27" layer="95" xref="yes"/>
-</segment>
-<segment>
 <pinref part="U1" gate="G$1" pin="GPIO0"/>
 <wire x1="76.2" y1="83.82" x2="73.66" y2="83.82" width="0.1524" layer="91"/>
 <label x="73.66" y="83.82" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="Q4" gate="G$1" pin="G"/>
+<pinref part="R8" gate="G$1" pin="1"/>
+<wire x1="149.86" y1="134.62" x2="162.56" y2="134.62" width="0.1524" layer="91"/>
+<wire x1="162.56" y1="134.62" x2="162.56" y2="137.16" width="0.1524" layer="91"/>
+<wire x1="162.56" y1="134.62" x2="165.1" y2="134.62" width="0.1524" layer="91"/>
+<junction x="162.56" y="134.62"/>
+<label x="165.1" y="134.62" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="RELAIS_8" class="0">
@@ -11244,6 +11348,18 @@ Source: http://eshop.phoenixcontact.com .. 1729128.pdf</description>
 <pinref part="X1" gate="-1" pin="1"/>
 <wire x1="17.78" y1="76.2" x2="15.24" y2="76.2" width="0.1524" layer="91"/>
 <label x="15.24" y="76.2" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="RELAIS_1_OUT" class="0">
+<segment>
+<pinref part="Q4" gate="G$1" pin="D"/>
+<wire x1="139.7" y1="139.7" x2="137.16" y2="139.7" width="0.1524" layer="91"/>
+<label x="137.16" y="139.7" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="SV1" gate="1" pin="2"/>
+<wire x1="88.9" y1="139.7" x2="91.44" y2="139.7" width="0.1524" layer="91"/>
+<label x="91.44" y="139.7" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>
