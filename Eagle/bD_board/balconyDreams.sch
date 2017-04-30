@@ -14545,6 +14545,11 @@ DIN A3, landscape with extra doc field</description>
 <part name="C2" library="rcl" deviceset="CPOL-EU" device="E5-6" value="0.33uF"/>
 <part name="GND34" library="supply1" deviceset="GND" device=""/>
 <part name="FRAME1" library="frames" deviceset="DINA3_L" device=""/>
+<part name="X9" library="con-phoenix-254" deviceset="MPT2" device=""/>
+<part name="X10" library="con-phoenix-254" deviceset="MPT2" device=""/>
+<part name="X11" library="con-phoenix-254" deviceset="MPT2" device=""/>
+<part name="X12" library="con-phoenix-254" deviceset="MPT2" device=""/>
+<part name="GND38" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -14556,6 +14561,7 @@ DIN A3, landscape with extra doc field</description>
 <text x="144.78" y="71.12" size="2.54" layer="97">LEDs</text>
 <text x="30.48" y="104.14" size="2.54" layer="97">5V linear regulator</text>
 <text x="33.02" y="35.56" size="2.54" layer="97">power connector (7-30V)</text>
+<text x="353.06" y="134.62" size="2.54" layer="97" rot="R90">GND for valves</text>
 </plain>
 <instances>
 <instance part="U1" gate="G$1" x="182.88" y="129.54"/>
@@ -14673,6 +14679,15 @@ DIN A3, landscape with extra doc field</description>
 <instance part="GND34" gate="1" x="40.64" y="76.2"/>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
 <instance part="FRAME1" gate="G$2" x="287.02" y="0"/>
+<instance part="X9" gate="-1" x="363.22" y="160.02"/>
+<instance part="X9" gate="-2" x="363.22" y="154.94"/>
+<instance part="X10" gate="-1" x="363.22" y="144.78"/>
+<instance part="X10" gate="-2" x="363.22" y="139.7"/>
+<instance part="X11" gate="-1" x="363.22" y="129.54"/>
+<instance part="X11" gate="-2" x="363.22" y="124.46"/>
+<instance part="X12" gate="-1" x="363.22" y="114.3"/>
+<instance part="X12" gate="-2" x="363.22" y="109.22"/>
+<instance part="GND38" gate="1" x="358.14" y="104.14"/>
 </instances>
 <busses>
 </busses>
@@ -14867,6 +14882,40 @@ DIN A3, landscape with extra doc field</description>
 <pinref part="GND34" gate="1" pin="GND"/>
 <pinref part="C2" gate="G$1" pin="-"/>
 <wire x1="40.64" y1="78.74" x2="40.64" y2="81.28" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="GND38" gate="1" pin="GND"/>
+<pinref part="X12" gate="-2" pin="1"/>
+<wire x1="358.14" y1="106.68" x2="358.14" y2="109.22" width="0.1524" layer="91"/>
+<wire x1="358.14" y1="109.22" x2="360.68" y2="109.22" width="0.1524" layer="91"/>
+<pinref part="X12" gate="-1" pin="1"/>
+<wire x1="360.68" y1="114.3" x2="358.14" y2="114.3" width="0.1524" layer="91"/>
+<wire x1="358.14" y1="114.3" x2="358.14" y2="109.22" width="0.1524" layer="91"/>
+<junction x="358.14" y="109.22"/>
+<pinref part="X11" gate="-2" pin="1"/>
+<wire x1="358.14" y1="124.46" x2="360.68" y2="124.46" width="0.1524" layer="91"/>
+<wire x1="358.14" y1="124.46" x2="358.14" y2="114.3" width="0.1524" layer="91"/>
+<junction x="358.14" y="114.3"/>
+<pinref part="X11" gate="-1" pin="1"/>
+<wire x1="360.68" y1="129.54" x2="358.14" y2="129.54" width="0.1524" layer="91"/>
+<wire x1="358.14" y1="129.54" x2="358.14" y2="124.46" width="0.1524" layer="91"/>
+<junction x="358.14" y="124.46"/>
+<pinref part="X10" gate="-2" pin="1"/>
+<wire x1="358.14" y1="139.7" x2="360.68" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="358.14" y1="139.7" x2="358.14" y2="129.54" width="0.1524" layer="91"/>
+<junction x="358.14" y="129.54"/>
+<pinref part="X10" gate="-1" pin="1"/>
+<wire x1="360.68" y1="144.78" x2="358.14" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="358.14" y1="144.78" x2="358.14" y2="139.7" width="0.1524" layer="91"/>
+<junction x="358.14" y="139.7"/>
+<pinref part="X9" gate="-2" pin="1"/>
+<wire x1="358.14" y1="154.94" x2="360.68" y2="154.94" width="0.1524" layer="91"/>
+<wire x1="358.14" y1="154.94" x2="358.14" y2="144.78" width="0.1524" layer="91"/>
+<junction x="358.14" y="144.78"/>
+<pinref part="X9" gate="-1" pin="1"/>
+<wire x1="360.68" y1="160.02" x2="358.14" y2="160.02" width="0.1524" layer="91"/>
+<wire x1="358.14" y1="160.02" x2="358.14" y2="154.94" width="0.1524" layer="91"/>
+<junction x="358.14" y="154.94"/>
 </segment>
 </net>
 <net name="VCC" class="0">
