@@ -1965,6 +1965,14 @@ Covered vias can be set in Masks (Limit).
 <contactref element="X10" pad="1"/>
 <contactref element="X9" pad="2"/>
 <contactref element="X9" pad="1"/>
+<via x="20.32" y="69.85" extent="1-16" drill="0.4"/>
+<via x="13.97" y="66.04" extent="1-16" drill="0.4"/>
+<via x="20.32" y="62.23" extent="1-16" drill="0.4"/>
+<via x="13.97" y="59.69" extent="1-16" drill="0.4"/>
+<via x="20.32" y="57.15" extent="1-16" drill="0.4"/>
+<via x="13.97" y="54.61" extent="1-16" drill="0.4"/>
+<via x="20.32" y="52.07" extent="1-16" drill="0.4"/>
+<via x="13.97" y="49.53" extent="1-16" drill="0.4"/>
 </signal>
 <signal name="VCC">
 <contactref element="SV1" pad="10"/>
