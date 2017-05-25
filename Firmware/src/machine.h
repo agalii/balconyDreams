@@ -30,7 +30,6 @@ private:
   void stopWater();
   void setLED(unsigned int led, bool state);
   void checkWebServer();
-  bool needsWater(int sensor);
 
 public:
   Machine();

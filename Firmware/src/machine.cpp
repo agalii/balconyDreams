@@ -13,6 +13,7 @@ enum {
 
 #define MEASURE_INTERVAL (30 * MILLIS_PER_MINUTE)
 #define WATER_DURATION (45 * MILLIS_PER_SECOND)
+#define WATER_THRESHOLD 3000
 #define LOG_SERVER_PORT 2121
 
 struct sensorValveMapping {
@@ -63,10 +64,6 @@ void Machine::setLED(unsigned int led, bool state) {
     digitalWrite(ledPins[led], state);
 }
 
-bool Machine::needsWater(int sensor) {
-  return analogRead(PIN_A0 + sensor) > 3000;
-}
-
 void Machine::debugTimerCallback() {
   uptime++;
 
@@ -88,7 +85,7 @@ void Machine::statusTimerCallback() {
   char buf[256];
 
   xsprintf(buf, "status: { uptime: %lu, valves_watered: [ %d, %d, %d, %d, %d, %d, %d, %d ]}\n", uptime,
-           valveWateredCount[0], valveWateredCount[2], valveWateredCount[3], valveWateredCount[4],
+           valveWateredCount[0], valveWateredCount[1], valveWateredCount[2], valveWateredCount[3],
            valveWateredCount[4], valveWateredCount[5], valveWateredCount[6], valveWateredCount[7]);
   debugLog(buf);
 }
@@ -189,19 +186,31 @@ void Machine::triggerState(int state) {
       waitState(MACHINE_STATE_MEASURE, MEASURE_INTERVAL);
       break;
 
-    case MACHINE_STATE_MEASURE:
-      debugLog("Measuring!\n");
+    case MACHINE_STATE_MEASURE: {
+      unsigned int sensorReading[6];
+
+      for (unsigned int i = 0; i < ARRAY_SIZE(sensorReading); i++)
+        sensorReading[i] = analogRead(i);
 
       for (unsigned int i = 0; i < ARRAY_SIZE(sensorValveMappings); i++) {
         struct sensorValveMapping *map = sensorValveMappings + i;
 
-        if (needsWater(map->sensor - 1))
+        if (sensorReading[map->sensor - 1] > WATER_THRESHOLD)
           valvePending[map->valve - 1] = true;
       }
+
+      char buf[256];
+      xsprintf(buf, "measurements: { sensors: [ %d, %d, %d, %d, %d, %d ], valves_pending: [ %d, %d, %d, %d, %d, %d, %d ] }\n",
+              sensorReading[0], sensorReading[1], sensorReading[2], sensorReading[3],
+              sensorReading[4], sensorReading[5],
+              valvePending[0], valvePending[1], valvePending[2], valvePending[3],
+              valvePending[4], valvePending[5], valvePending[6]);
+      debugLog(buf);
 
       waitState(MACHINE_STATE_WATER, 0);
 
       break;
+    }
 
     case MACHINE_STATE_WATER:
       for (unsigned int i = 0; i < ARRAY_SIZE(valvePending); i++) {
