@@ -7,37 +7,41 @@
 enum {
   MACHINE_STATE_INITIALIZING = 0,
   MACHINE_STATE_IDLE,
-  MACHINE_STATE_MEASURE,
   MACHINE_STATE_WATER,
 };
 
 #define MEASURE_INTERVAL (30 * MILLIS_PER_MINUTE)
-#define WATER_DURATION (45 * MILLIS_PER_SECOND)
 #define WATER_THRESHOLD 3000
 #define LOG_SERVER_PORT 2121
 
 struct sensorValveMapping {
   int sensor;
   int valve;
+  int duration;
 } sensorValveMappings[] = {
-  { .sensor = 1, .valve = 4, },
-  { .sensor = 1, .valve = 5, },
-  { .sensor = 1, .valve = 6, },
-//  { .sensor = 2, .valve = 1, },
-  { .sensor = 3, .valve = 3, },
-  { .sensor = 4, .valve = 2, },
+  { .sensor = 1, .valve = 4, .duration = 30 * MILLIS_PER_SECOND },
+  { .sensor = 1, .valve = 5, .duration = 30 * MILLIS_PER_SECOND  },
+  { .sensor = 1, .valve = 6, .duration = 45 * MILLIS_PER_SECOND  },
+//  { .sensor = 2, .valve = 1,  .duration = 45 * MILLIS_PER_SECOND },
+  { .sensor = 3, .valve = 3, .duration = 45 * MILLIS_PER_SECOND  },
+  { .sensor = 4, .valve = 2, .duration = 45 * MILLIS_PER_SECOND  },
 };
 
 // Static callback wrappers
+
+static void staticDebugTimerCallback(void *ctx) {
+  Machine *machine = (Machine *) ctx;
+  machine->debugTimerCallback();
+}
 
 static void staticStatusTimerCallback(void *ctx) {
   Machine *machine = (Machine *) ctx;
   machine->statusTimerCallback();
 }
 
-static void staticDebugTimerCallback(void *ctx) {
+static void staticMeasurementTimerCallback(void *ctx) {
   Machine *machine = (Machine *) ctx;
-  machine->debugTimerCallback();
+  machine->measurementTimerCallback();
 }
 
 static void staticWifiManagerCallback(void *ctx) {
@@ -90,6 +94,30 @@ void Machine::statusTimerCallback() {
   debugLog(buf);
 }
 
+void Machine::measurementTimerCallback() {
+  unsigned int sensorReading[6];
+
+  for (unsigned int i = 0; i < ARRAY_SIZE(sensorReading); i++)
+    sensorReading[i] = analogRead(i);
+
+  for (unsigned int i = 0; i < ARRAY_SIZE(sensorValveMappings); i++) {
+    struct sensorValveMapping *map = sensorValveMappings + i;
+
+    if (sensorReading[map->sensor - 1] > WATER_THRESHOLD)
+      valvesDuration[map->valve - 1] = map->duration;
+  }
+
+  char buf[256];
+  xsprintf(buf, "measurements: { sensors: [ %d, %d, %d, %d, %d, %d ], valves_pending: [ %d, %d, %d, %d, %d, %d, %d ] }\n",
+          sensorReading[0], sensorReading[1], sensorReading[2], sensorReading[3],
+          sensorReading[4], sensorReading[5],
+          valvesDuration[0], valvesDuration[1], valvesDuration[2], valvesDuration[3],
+          valvesDuration[4], valvesDuration[5], valvesDuration[6]);
+  debugLog(buf);
+
+  waitState(MACHINE_STATE_WATER, 0);
+}
+
 void Machine::wifiManagerCallback() {
   setLED(0, wifiManager->connected());
 
@@ -102,7 +130,7 @@ void Machine::wifiManagerCallback() {
 Machine::Machine() {
   uptime = 0;
 
-  memset(valvePending, 0, sizeof(valvePending));
+  memset(valvesDuration, 0, sizeof(valvesDuration));
   memset(valveWateredCount, 0, sizeof(valveWateredCount));
 }
 
@@ -124,8 +152,9 @@ void Machine::initialize() {
     digitalWrite(ledPins[i], 0);
   }
 
-  statusTimer = new Timer(10 * MILLIS_PER_MINUTE, staticStatusTimerCallback, this);
   debugTimer = new Timer(1 * MILLIS_PER_SECOND, staticDebugTimerCallback, this);
+  statusTimer = new Timer(10 * MILLIS_PER_MINUTE, staticStatusTimerCallback, this);
+  measurementTimer = new Timer(30 * MILLIS_PER_MINUTE, staticMeasurementTimerCallback, this);
 
   wifiManager = new WifiManager(staticWifiManagerCallback, this);
   wifiManager->connect(WIFI_SSID, WIFI_PASS);
@@ -157,14 +186,21 @@ void Machine::checkWebServer() {
     client.println("<!DOCTYPE HTML>");
     client.println("<html>");
 
-    // output the value of each analog input pin
-    for (int analogChannel = 0; analogChannel < 6; analogChannel++) {
-      int sensorReading = analogRead(analogChannel);
-      client.print("analog input ");
-      client.print(analogChannel);
-      client.print(" is ");
-      client.print(sensorReading);
-      client.println("<br />");
+    int lastSensor = -1;
+
+    for (unsigned int i = 0; i < ARRAY_SIZE(sensorValveMappings); i++) {
+      struct sensorValveMapping *map = sensorValveMappings + i;
+
+      if (map->sensor == lastSensor)
+        continue;
+
+      lastSensor = map->sensor;
+
+      int sensorReading = analogRead(map->sensor - 1);
+
+      char buf[128];
+      xsprintf(buf, "Sensor #%d reads %d<br/>", map->sensor, sensorReading);
+      client.println(buf);
     }
 
     client.println("<br />");
@@ -183,49 +219,23 @@ void Machine::triggerState(int state) {
   switch (state) {
     case MACHINE_STATE_IDLE:
       stopWater();
-      waitState(MACHINE_STATE_MEASURE, MEASURE_INTERVAL);
+      waitState(MACHINE_STATE_IDLE, 1 * MILLIS_PER_SECOND);
       break;
-
-    case MACHINE_STATE_MEASURE: {
-      unsigned int sensorReading[6];
-
-      for (unsigned int i = 0; i < ARRAY_SIZE(sensorReading); i++)
-        sensorReading[i] = analogRead(i);
-
-      for (unsigned int i = 0; i < ARRAY_SIZE(sensorValveMappings); i++) {
-        struct sensorValveMapping *map = sensorValveMappings + i;
-
-        if (sensorReading[map->sensor - 1] > WATER_THRESHOLD)
-          valvePending[map->valve - 1] = true;
-      }
-
-      char buf[256];
-      xsprintf(buf, "measurements: { sensors: [ %d, %d, %d, %d, %d, %d ], valves_pending: [ %d, %d, %d, %d, %d, %d, %d ] }\n",
-              sensorReading[0], sensorReading[1], sensorReading[2], sensorReading[3],
-              sensorReading[4], sensorReading[5],
-              valvePending[0], valvePending[1], valvePending[2], valvePending[3],
-              valvePending[4], valvePending[5], valvePending[6]);
-      debugLog(buf);
-
-      waitState(MACHINE_STATE_WATER, 0);
-
-      break;
-    }
 
     case MACHINE_STATE_WATER:
-      for (unsigned int i = 0; i < ARRAY_SIZE(valvePending); i++) {
-        if (valvePending[i]) {
+      for (unsigned int i = 0; i < ARRAY_SIZE(valvesDuration); i++) {
+        if (valvesDuration[i]) {
           stopWater();
           startWater(i);
-          valvePending[i] = false;
 
           char buf[256];
-          xsprintf(buf, "Watering %d\n", i+1);
+          xsprintf(buf, "Watering valve %d for %d seconds\n", i+1, valvesDuration[i] / (unsigned int) MILLIS_PER_SECOND);
           debugLog(buf);
 
           valveWateredCount[i]++;
 
-          waitState(MACHINE_STATE_WATER, WATER_DURATION);
+          waitState(MACHINE_STATE_WATER, valvesDuration[i]);
+          valvesDuration[i] = 0;
           return;
         }
       }
@@ -239,7 +249,7 @@ void Machine::debugLog(const char *msg) {
 
   if (logServer) {
     setLED(2, 1);
-    logServer->beginPacket(logServerAddress, 2121);
+    logServer->beginPacket(logServerAddress, LOG_SERVER_PORT);
     logServer->write(msg);
     logServer->endPacket();
     setLED(2, 0);
@@ -251,6 +261,7 @@ void Machine::tick() {
 
   debugTimer->tick();
   statusTimer->tick();
+  measurementTimer->tick();
   wifiManager->tick();
   StateMachine::tick();
 }

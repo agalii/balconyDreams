@@ -12,8 +12,9 @@
 class Machine : public StateMachine {
 
 private:
-  Timer *statusTimer;
   Timer *debugTimer;
+  Timer *statusTimer;
+  Timer *measurementTimer;
 
   WifiManager *wifiManager;
   WiFiServer *webServer;
@@ -22,7 +23,7 @@ private:
 
   unsigned long uptime;
 
-  bool valvePending[8];
+  unsigned int valvesDuration[8];
   unsigned int valveWateredCount[8];
 
   void triggerState(int state);
@@ -37,8 +38,9 @@ public:
   void tick();
 
   // Must be public for static wrappers
-  void statusTimerCallback();
   void debugTimerCallback();
+  void statusTimerCallback();
+  void measurementTimerCallback();
   void wifiManagerCallback();
 
   void debugLog(const char[]);
