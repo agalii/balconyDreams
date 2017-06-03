@@ -20,11 +20,11 @@ struct sensorValveMapping {
   int duration;
 } sensorValveMappings[] = {
   { .sensor = 1, .valve = 4, .duration = 30 * MILLIS_PER_SECOND },
-  { .sensor = 1, .valve = 5, .duration = 30 * MILLIS_PER_SECOND  },
-  { .sensor = 1, .valve = 6, .duration = 45 * MILLIS_PER_SECOND  },
-//  { .sensor = 2, .valve = 1,  .duration = 45 * MILLIS_PER_SECOND },
-  { .sensor = 3, .valve = 3, .duration = 45 * MILLIS_PER_SECOND  },
-  { .sensor = 4, .valve = 2, .duration = 45 * MILLIS_PER_SECOND  },
+  { .sensor = 1, .valve = 5, .duration = 20 * MILLIS_PER_SECOND  },
+  { .sensor = 1, .valve = 6, .duration = 30 * MILLIS_PER_SECOND  },
+  { .sensor = 2, .valve = 2, .duration = 30 * MILLIS_PER_SECOND },
+  { .sensor = 3, .valve = 3, .duration = 30 * MILLIS_PER_SECOND  },
+  { .sensor = 4, .valve = 1, .duration = 30 * MILLIS_PER_SECOND  },
 };
 
 // Static callback wrappers
